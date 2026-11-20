@@ -388,3 +388,132 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* T-06.05: mirrors AboutPage.module.css without importing a page module. */
+.about {
+  --about-page-width: 52rem;
+  --about-prose-width: 60ch;
+  --about-title-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --about-section-padding: clamp(1rem, 2.5vw, 1.5rem);
+  --about-section-min-block-size: 8.5rem;
+  --about-heading-width: 12rem;
+  --about-line-height: calc(1rem * var(--line-height-body, 1.55));
+  --about-title-lines: 2;
+  --about-copy-lines: 6;
+  --about-purpose-lines: 5;
+
+  inline-size: min(100%, var(--about-page-width));
+  min-inline-size: 0;
+}
+
+.aboutHeading {
+  font-size: var(--font-size-title);
+  line-height: 1.1;
+  min-block-size: calc(var(--about-title-lines) * 1.1em);
+  margin-block-end: var(--about-title-gap);
+}
+
+.aboutSection {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem 1.5rem;
+  min-block-size: var(--about-section-min-block-size);
+  padding-block: var(--about-section-padding);
+  border-block-start: 1px solid var(--color-border);
+  min-inline-size: 0;
+}
+
+.aboutSectionHeading {
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  line-height: 1.25;
+  min-inline-size: 0;
+}
+
+.aboutHeading + .aboutSection {
+  --about-copy-lines: var(--about-purpose-lines);
+}
+
+.aboutSectionCopy {
+  display: grid;
+  grid-auto-rows: var(--about-line-height);
+  align-items: center;
+  block-size: calc(var(--about-copy-lines) * var(--about-line-height));
+  max-inline-size: var(--about-prose-width);
+  min-inline-size: 0;
+  overflow: clip;
+}
+
+@media (min-width: 22rem) {
+  .about {
+    --about-title-lines: 1;
+    --about-copy-lines: 5;
+    --about-purpose-lines: 4;
+  }
+}
+
+@media (min-width: 32rem) {
+  .about {
+    --about-copy-lines: 4;
+    --about-purpose-lines: 3;
+  }
+}
+
+@media (min-width: 64rem) {
+  .about {
+    --about-copy-lines: 3;
+  }
+}
+
+@media (min-width: 48rem) {
+  .aboutSection {
+    grid-template-columns: var(--about-heading-width) minmax(0, 1fr);
+  }
+}
+
+/* Matches NotFoundPage's bounded container; no interactive placeholder controls. */
+.genericRoute {
+  --not-found-width: 48rem;
+  --not-found-min-block-size: 14rem;
+  --not-found-padding: clamp(1.25rem, 4vw, 2.5rem);
+  --generic-title-lines: 2;
+  --generic-copy-lines: 2;
+
+  display: grid;
+  align-content: center;
+  gap: 1rem;
+  inline-size: min(100%, var(--not-found-width));
+  min-inline-size: 0;
+  min-block-size: var(--not-found-min-block-size);
+  padding: var(--not-found-padding);
+  border-block-start: 3px solid var(--color-accent);
+  background: #fff;
+}
+
+.genericRouteBlock {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.genericRouteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.genericRouteBlock > .shape:first-child {
+  font-size: var(--font-size-title);
+  block-size: calc(var(--generic-title-lines) * 1.1em);
+}
+
+.genericRouteBlock > .shape:nth-child(2) {
+  block-size: calc(var(--generic-copy-lines) * 1rem * var(--line-height-body, 1.55));
+}
+
+@media (min-width: 22rem) {
+  .genericRoute { --generic-title-lines: 1; }
+}
+
+@media (min-width: 30rem) {
+  .genericRoute { --generic-copy-lines: 1; }
+}
