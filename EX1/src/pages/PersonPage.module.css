@@ -1,0 +1,98 @@
+.page {
+  /* Detail reading measure and dimensions for the matching loading skeleton. */
+  --person-page-width: 52rem;
+  --person-section-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --person-avatar-size: 3.5rem;
+  --person-metadata-min-block-size: 6rem;
+  --person-prose-width: 65ch;
+
+  display: grid;
+  gap: var(--person-section-gap);
+  inline-size: min(100%, var(--person-page-width));
+}
+
+.returnLink {
+  justify-self: start;
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}
+
+.returnLink:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.page h1,
+.page h2,
+.page p,
+.metadata,
+.metadata dd,
+.contributions {
+  margin: 0;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.heading h1 {
+  min-inline-size: 0;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--person-avatar-size);
+  block-size: var(--person-avatar-size);
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-page);
+  font-weight: 650;
+}
+
+.metadata {
+  display: grid;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  min-block-size: var(--person-metadata-min-block-size);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+@media (min-width: 36rem) {
+  .metadata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.metadata dt {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.section,
+.missing {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.section h2 {
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  line-height: 1.25;
+}
+
+.prose,
+.contributions {
+  max-inline-size: var(--person-prose-width);
+}
+
+.contributions {
+  display: grid;
+  gap: 0.5rem;
+  padding-inline-start: 1.25rem;
+}
