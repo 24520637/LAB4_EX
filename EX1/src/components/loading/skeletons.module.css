@@ -32,3 +32,143 @@
   aspect-ratio: 1;
   border-radius: 50%;
 }
+
+/* T-06.02: mirrors OverviewPage.module.css without altering the real page. */
+.overview {
+  --overview-columns: 1;
+  --overview-grid-gap: clamp(0.75rem, 2vw, 1.5rem);
+  --overview-card-min-block-size: 12rem;
+  --overview-avatar-size: 2.75rem;
+  --overview-intro-min-block-size: 7rem;
+  --overview-intro-padding: clamp(1.25rem, 3vw, 2.25rem);
+  --overview-intro-font-size: clamp(1.125rem, 1rem + 0.65vw, 1.5rem);
+  --overview-card-padding: clamp(1rem, 2vw, 1.5rem);
+  /* Reserve the wrapped lines measured in the loaded page at reference widths. */
+  --overview-intro-lines: 6;
+  --overview-card-field-lines: 2;
+  --overview-card-summary-lines: 5;
+
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  min-inline-size: 0;
+}
+
+.overviewHeading {
+  font-size: var(--font-size-title);
+  line-height: 1.1;
+  min-block-size: 1.1em;
+}
+
+.overviewIntro {
+  display: grid;
+  align-content: center;
+  gap: 0.375rem;
+  min-block-size: max(
+    var(--overview-intro-min-block-size),
+    calc(2 * var(--overview-intro-padding) + var(--overview-intro-lines) * var(--overview-intro-font-size) * 1.45)
+  );
+  padding: var(--overview-intro-padding);
+  background: var(--color-accent);
+}
+
+.overviewIntro .shape {
+  background: var(--color-page);
+  opacity: 0.7;
+}
+
+.overviewFeatured {
+  display: grid;
+  gap: var(--overview-grid-gap);
+}
+
+.overviewSectionHeading {
+  display: grid;
+  align-content: center;
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  min-block-size: 1.25em;
+}
+
+.overviewGrid {
+  display: grid;
+  grid-template-columns: repeat(var(--overview-columns), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--overview-grid-gap);
+}
+
+.overviewCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  min-block-size: max(
+    var(--overview-card-min-block-size),
+    calc(
+      2 * var(--overview-card-padding) + 2px + 0.875rem
+      + max(
+        var(--overview-avatar-size),
+        1.125rem * 1.25 + 0.25rem + var(--overview-card-field-lines) * 0.875rem * var(--line-height-body, 1.55)
+      )
+      + var(--overview-card-summary-lines) * 1rem * var(--line-height-body, 1.55)
+    )
+  );
+  padding: var(--overview-card-padding);
+  border: 1px solid var(--color-border);
+  background: #fff;
+}
+
+.overviewIdentity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.overviewAvatar {
+  display: block;
+  flex: none;
+  inline-size: var(--overview-avatar-size);
+  block-size: var(--overview-avatar-size);
+}
+
+.overviewNames {
+  display: grid;
+  flex: 1;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.overviewSummary {
+  display: grid;
+  gap: 0.375rem;
+}
+
+@media (min-width: 22rem) {
+  .overview {
+    --overview-intro-lines: 5;
+    --overview-card-field-lines: 1;
+    --overview-card-summary-lines: 4;
+  }
+}
+
+@media (min-width: 30rem) {
+  .overview {
+    --overview-intro-lines: 4;
+  }
+}
+
+@media (min-width: 40rem) {
+  .overview {
+    --overview-intro-lines: 3;
+  }
+}
+
+@media (min-width: 44rem) {
+  .overview {
+    --overview-columns: 2;
+  }
+}
+
+@media (min-width: 68rem) {
+  .overview {
+    --overview-columns: 3;
+  }
+}
