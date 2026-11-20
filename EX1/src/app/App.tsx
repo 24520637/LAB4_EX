@@ -1,9 +1,18 @@
-/** Temporary foundation-only entry point. Pages, routing and styles are future tasks. */
+/// <reference types="vite/client" />
+
+import { BrowserRouter } from 'react-router'
+import SiteNav from '../components/navigation/SiteNav'
+import SkipLink from '../components/navigation/SkipLink'
+import AppLayout from './AppLayout'
+import '../styles/global.css'
+
 export default function App() {
   return (
-    <main>
-      <h1>Pioneer Atlas</h1>
-      <p>Application foundation. Route-level features will be added in later tasks.</p>
-    </main>
+    <BrowserRouter>
+      <SkipLink />
+      <AppLayout navigation={<SiteNav />}>
+        <h1>Pioneer Atlas</h1>
+      </AppLayout>
+    </BrowserRouter>
   )
 }

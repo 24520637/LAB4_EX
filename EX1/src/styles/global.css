@@ -1,0 +1,67 @@
+@import "./tokens.css";
+
+html {
+  box-sizing: border-box;
+  scrollbar-gutter: stable;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  background: var(--color-page);
+  color: var(--color-text);
+  font-family: var(--font-system);
+  line-height: var(--line-height-body);
+  overflow-wrap: anywhere;
+}
+
+#root {
+  display: flex;
+  min-block-size: 100vh;
+  min-block-size: 100svh;
+  flex-direction: column;
+}
+
+.app-shell__header,
+.app-shell__main,
+.app-shell__footer {
+  inline-size: min(var(--page-width), calc(100% - 2 * var(--page-gutter)));
+  margin-inline: auto;
+}
+
+.app-shell__header,
+.app-shell__footer {
+  padding-block: var(--shell-padding);
+}
+
+.app-shell__header {
+  border-block-end: 1px solid var(--color-border);
+}
+
+.app-shell__brand {
+  margin: 0;
+  color: var(--color-accent);
+  font-weight: 650;
+}
+
+.app-shell__main {
+  flex: 1;
+  padding-block: var(--page-padding);
+}
+
+:where(.app-shell__main h1) {
+  margin-block-start: 0;
+  font-size: var(--font-size-title);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.app-shell__footer {
+  border-block-start: 1px solid var(--color-border);
+  color: var(--color-muted);
+}

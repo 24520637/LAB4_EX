@@ -1,0 +1,19 @@
+:root {
+  /* Shared content measure and responsive shell spacing. */
+  --page-width: 72rem;
+  --page-gutter: clamp(1rem, 4vw, 3rem);
+  --shell-padding: 1rem;
+  --page-padding: clamp(2rem, 5vw, 4.5rem);
+
+  /* System typography scales from small screens to wide layouts. */
+  --font-system: system-ui, "Segoe UI", sans-serif;
+  --line-height-body: 1.55;
+  --font-size-title: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+
+  /* Shared surfaces, text and boundaries. */
+  --color-page: #f3f7f9;
+  --color-text: #182c3a;
+  --color-muted: #3c5361;
+  --color-border: #a7c3cc;
+  --color-accent: #0c5665;
+}
