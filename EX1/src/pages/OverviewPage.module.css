@@ -1,0 +1,129 @@
+.page {
+  /* Reuse these dimensions for the Overview loading skeleton. */
+  --overview-columns: 1;
+  --overview-grid-gap: clamp(0.75rem, 2vw, 1.5rem);
+  --overview-card-min-block-size: 12rem;
+  --overview-avatar-size: 2.75rem;
+  --overview-intro-min-block-size: 7rem;
+
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 44rem) {
+  .page {
+    --overview-columns: 2;
+  }
+}
+
+@media (min-width: 68rem) {
+  .page {
+    --overview-columns: 3;
+  }
+}
+
+.page h1,
+.featured h2,
+.card h3,
+.intro p,
+.field,
+.summary {
+  margin: 0;
+}
+
+.intro {
+  display: grid;
+  align-items: center;
+  min-block-size: var(--overview-intro-min-block-size);
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  background: var(--color-accent);
+  color: var(--color-page);
+}
+
+.intro p {
+  max-inline-size: 55ch;
+  font-size: clamp(1.125rem, 1rem + 0.65vw, 1.5rem);
+  line-height: 1.45;
+}
+
+.featured {
+  display: grid;
+  gap: var(--overview-grid-gap);
+}
+
+.featured h2 {
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  line-height: 1.25;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--overview-columns), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--overview-grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grid li {
+  display: flex;
+  min-inline-size: 0;
+}
+
+.card {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.875rem;
+  min-inline-size: 0;
+  min-block-size: var(--overview-card-min-block-size);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--color-accent);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--overview-avatar-size);
+  block-size: var(--overview-avatar-size);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-page);
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.card h3 {
+  color: var(--color-accent);
+  font-size: 1.125rem;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.field {
+  margin-block-start: 0.25rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
