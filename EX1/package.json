@@ -12,7 +12,8 @@
     "test:run": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "test:e2e:install": "playwright install chromium"
+    "test:e2e:install": "playwright install chromium",
+    "verify:chunks": "node scripts/verify-chunks.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",
