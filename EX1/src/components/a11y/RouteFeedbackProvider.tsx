@@ -20,6 +20,7 @@ type RouteFeedback = {
   message: string
   announceLoading: (routeKey: string, label: string) => void
   announceReady: (routeKey: string, label: string) => void
+  clearAnnouncement: (routeKey: string) => void
 }
 
 const RouteFeedbackContext = createContext<RouteFeedback | null>(null)
@@ -52,11 +53,16 @@ export default function RouteFeedbackProvider({ children }: { children: ReactNod
     setEvent({ key, message: `${label.charAt(0).toUpperCase()}${label.slice(1)} loaded` })
   }, [])
 
+  const clearAnnouncement = useCallback((key: string) => {
+    if (key !== activeKey.current) return
+    setEvent((current) => current?.key === key ? null : current)
+  }, [])
+
   // A previous route's message is never displayed for a new history entry.
   const message = event?.key === routeKey ? event.message : ''
   const value = useMemo(
-    () => ({ routeKey, message, announceLoading, announceReady }),
-    [routeKey, message, announceLoading, announceReady],
+    () => ({ routeKey, message, announceLoading, announceReady, clearAnnouncement }),
+    [routeKey, message, announceLoading, announceReady, clearAnnouncement],
   )
 
   return <RouteFeedbackContext.Provider value={value}>{children}</RouteFeedbackContext.Provider>
