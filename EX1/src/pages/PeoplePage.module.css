@@ -1,0 +1,124 @@
+.page {
+  /* Reuse the field and card dimensions for the People loading skeleton. */
+  --people-columns: 1;
+  --people-grid-gap: clamp(0.75rem, 2vw, 1.5rem);
+  --people-search-min-block-size: 3rem;
+  --people-card-min-block-size: 8rem;
+  --people-avatar-size: 2.75rem;
+
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+@media (min-width: 44rem) {
+  .page {
+    --people-columns: 2;
+  }
+}
+
+@media (min-width: 68rem) {
+  .page {
+    --people-columns: 3;
+  }
+}
+
+.page h1,
+.card h2,
+.card p,
+.empty {
+  margin: 0;
+}
+
+.search {
+  display: grid;
+  gap: 0.5rem;
+  font-weight: 650;
+}
+
+.search input {
+  inline-size: 100%;
+  min-inline-size: 0;
+  min-block-size: var(--people-search-min-block-size);
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-muted);
+  background: #fff;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: 400;
+}
+
+.search input:focus-visible,
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--people-columns), minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--people-grid-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grid li {
+  display: flex;
+  min-inline-size: 0;
+}
+
+.card {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  min-block-size: var(--people-card-min-block-size);
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  background: #fff;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.card:hover {
+  border-color: var(--color-accent);
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--people-avatar-size);
+  block-size: var(--people-avatar-size);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-page);
+  color: var(--color-accent);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.card h2 {
+  color: var(--color-accent);
+  font-size: 1.125rem;
+  line-height: 1.25;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.card p {
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.card h2 + p {
+  margin-block-start: 0.25rem;
+}
+
+.empty:not(:empty) {
+  padding: 1rem;
+  border-block-start: 1px solid var(--color-border);
+  color: var(--color-muted);
+}
