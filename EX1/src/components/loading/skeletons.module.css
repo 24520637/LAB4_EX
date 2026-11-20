@@ -251,3 +251,140 @@
 @media (min-width: 68rem) {
   .people { --people-columns: 3; }
 }
+
+/* T-06.04: reserve the tallest measured content in each detail section.
+   Profile names and copy can wrap to fewer lines after loading. */
+.person {
+  --person-page-width: 52rem;
+  --person-section-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --person-avatar-size: 3.5rem;
+  --person-metadata-min-block-size: 6rem;
+  --person-prose-width: 65ch;
+  --person-line-height: calc(1rem * var(--line-height-body, 1.55));
+  --person-title-lines: 2;
+  --person-field-lines: 2;
+
+  display: grid;
+  gap: var(--person-section-gap);
+  inline-size: min(100%, var(--person-page-width));
+  min-inline-size: 0;
+}
+
+.personReturn {
+  justify-self: start;
+  min-inline-size: 0;
+}
+
+.personHeading {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+  font-size: var(--font-size-title);
+  line-height: 1.1;
+  min-block-size: calc(var(--person-title-lines) * 1.1em);
+  min-inline-size: 0;
+}
+
+.personHeading > .shape {
+  flex: 1;
+}
+
+.personAvatar {
+  display: block;
+  flex: none;
+  inline-size: var(--person-avatar-size);
+  block-size: var(--person-avatar-size);
+}
+
+.personMetadata {
+  display: grid;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  min-block-size: var(--person-metadata-min-block-size);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  background: #fff;
+  min-inline-size: 0;
+}
+
+.personMetadataItem {
+  display: grid;
+  grid-template-rows: calc(0.875 * var(--person-line-height)) var(--person-line-height);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+.personMetadataItem:last-child {
+  grid-template-rows: calc(0.875 * var(--person-line-height)) calc(var(--person-field-lines) * var(--person-line-height));
+}
+
+.personBiography,
+.personContributions {
+  display: grid;
+  gap: 0.75rem;
+  min-inline-size: 0;
+}
+
+.personSectionTitle {
+  display: grid;
+  align-content: center;
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  min-block-size: 1.25em;
+}
+
+.personSummary,
+.personContributionList {
+  display: grid;
+  max-inline-size: var(--person-prose-width);
+  min-inline-size: 0;
+}
+
+.personContributionList {
+  gap: 0.5rem;
+  padding-inline-start: 1.25rem;
+}
+
+.personSummary,
+.personContributionRow {
+  display: grid;
+  grid-auto-rows: var(--person-line-height);
+  align-items: center;
+  min-inline-size: 0;
+}
+
+@media (min-width: 23rem) {
+  .person { --person-field-lines: 1; }
+
+  .personContributionRow:first-child > .shape:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (min-width: 26rem) {
+  .person { --person-title-lines: 1; }
+}
+
+@media (min-width: 30rem) {
+  .personSummary > .shape:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (min-width: 32rem) {
+  .personContributionRow > .shape:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (min-width: 42rem) {
+  .personSummary > .shape:nth-child(n + 3),
+  .personContributionRow:first-child > .shape:nth-child(n + 2) {
+    display: none;
+  }
+}
+
+@media (min-width: 36rem) {
+  .personMetadata {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
