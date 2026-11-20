@@ -517,3 +517,12 @@
 @media (min-width: 30rem) {
   .genericRoute { --generic-copy-lines: 1; }
 }
+
+/* Reduced-motion safety net: no placeholder movement or transitions under
+   a user preference for reduced motion. This does not alter geometry. */
+@media (prefers-reduced-motion: reduce) {
+  .shape {
+    animation: none !important;
+    transition: none !important;
+  }
+}
