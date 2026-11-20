@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import RouteAnnouncement from '../components/a11y/RouteAnnouncement'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -12,6 +13,7 @@ export default function AppLayout({ children, navigation }: AppLayoutProps) {
         <p className="app-shell__brand">Pioneer Atlas</p>
         {navigation}
       </header>
+      <RouteAnnouncement />
       <main className="app-shell__main" id="main-content" tabIndex={-1}>
         {children}
       </main>
