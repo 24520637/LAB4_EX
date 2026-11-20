@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import RouteAnnouncement from '../components/a11y/RouteAnnouncement'
+import RouteFocusManager from '../components/a11y/RouteFocusManager'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -15,7 +16,7 @@ export default function AppLayout({ children, navigation }: AppLayoutProps) {
       </header>
       <RouteAnnouncement />
       <main className="app-shell__main" id="main-content" tabIndex={-1}>
-        {children}
+        <RouteFocusManager>{children}</RouteFocusManager>
       </main>
       <footer className="app-shell__footer">
         <small>Computing history project</small>
