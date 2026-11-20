@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router'
+import { Link, useMatch } from 'react-router'
 
 const styles = `
   .site-nav {
@@ -28,12 +28,23 @@ const styles = `
 `
 
 export default function SiteNav() {
+  const overview = useMatch('/')
+  const directory = useMatch('/people')
+  const profile = useMatch('/people/:personId')
+  const about = useMatch('/about')
+
   return (
     <nav aria-label="Primary" className="site-nav">
       <style href="pioneer-atlas-site-nav" precedence="components">{styles}</style>
-      <NavLink to="/" end>Overview</NavLink>
-      <NavLink to="/people" end>People</NavLink>
-      <NavLink to="/about" end>About</NavLink>
+      <Link to="/" aria-current={overview ? 'page' : undefined}>
+        Overview
+      </Link>
+      <Link to="/people" aria-current={directory || profile ? 'page' : undefined}>
+        People
+      </Link>
+      <Link to="/about" aria-current={about ? 'page' : undefined}>
+        About
+      </Link>
     </nav>
   )
 }

@@ -36,7 +36,12 @@ describe('SiteNav', () => {
   it.each([
     ['/', 'Overview'],
     ['/people', 'People'],
+    ['/people/', 'People'],
+    ['/people/ada-lovelace', 'People'],
+    ['/people/ada-lovelace/', 'People'],
+    ['/people/unknown-person', 'People'],
     ['/about', 'About'],
+    ['/about/', 'About'],
   ])('marks only the link for %s as the current page', (path, name) => {
     renderNavigation(path)
 
@@ -46,12 +51,15 @@ describe('SiteNav', () => {
     expect(currentLinks).toEqual([within(navigation).getByRole('link', { name })])
   })
 
-  it('leaves the directory link unmarked when viewing a person detail URL', () => {
-    renderNavigation('/people/ada-lovelace')
+  it.each(['/missing', '/people/ada-lovelace/extra', '/about/extra'])(
+    'does not mark a section current on the unknown path %s',
+    (path) => {
+      renderNavigation(path)
 
-    const navigation = screen.getByRole('navigation', { name: 'Primary' })
-    expect(within(navigation).queryByRole('link', { current: 'page' })).not.toBeInTheDocument()
-  })
+      const navigation = screen.getByRole('navigation', { name: 'Primary' })
+      expect(within(navigation).queryByRole('link', { current: 'page' })).not.toBeInTheDocument()
+    },
+  )
 
   it('supports reaching and activating the navigation links with Tab and Enter', async () => {
     const user = renderNavigation()
