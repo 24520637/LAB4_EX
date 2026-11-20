@@ -1,0 +1,45 @@
+.page {
+  /* The About loading skeleton can reuse the reading width and section dimensions. */
+  --about-page-width: 52rem;
+  --about-prose-width: 60ch;
+  --about-title-gap: clamp(1.25rem, 3vw, 2.5rem);
+  --about-section-padding: clamp(1rem, 2.5vw, 1.5rem);
+  --about-section-min-block-size: 8.5rem;
+  --about-heading-width: 12rem;
+
+  inline-size: min(100%, var(--about-page-width));
+}
+
+.page h1 {
+  margin: 0 0 var(--about-title-gap);
+}
+
+.section {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem 1.5rem;
+  min-block-size: var(--about-section-min-block-size);
+  padding-block: var(--about-section-padding);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.section h2,
+.section p {
+  margin: 0;
+}
+
+.section h2 {
+  color: var(--color-accent);
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.625rem);
+  line-height: 1.25;
+}
+
+.section p {
+  max-inline-size: var(--about-prose-width);
+}
+
+@media (min-width: 48rem) {
+  .section {
+    grid-template-columns: var(--about-heading-width) minmax(0, 1fr);
+  }
+}
