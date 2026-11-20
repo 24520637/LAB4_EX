@@ -1,0 +1,34 @@
+/* Page modules may override these aliases with their own existing geometry tokens.
+   Neutral, static shapes avoid animation-induced layout or motion. */
+.group {
+  --skeleton-line-size: 1rem;
+  --skeleton-avatar-size: var(--people-avatar-size, var(--overview-avatar-size, 2.75rem));
+  --skeleton-card-min-block-size: var(--people-card-min-block-size, var(--overview-card-min-block-size, 8rem));
+  --skeleton-grid-gap: var(--people-grid-gap, var(--overview-grid-gap, clamp(0.75rem, 2vw, 1.5rem)));
+
+  display: grid;
+  gap: var(--skeleton-grid-gap);
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+.shape {
+  display: block;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  background-color: var(--color-border, #a7c3cc);
+  pointer-events: none;
+  user-select: none;
+}
+
+.rectangle {
+  inline-size: var(--skeleton-width, 100%);
+  block-size: var(--skeleton-height, var(--skeleton-line-size, 1rem));
+  border-radius: 0.25rem;
+}
+
+.circle {
+  inline-size: var(--skeleton-diameter, var(--skeleton-avatar-size, 2.75rem));
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
