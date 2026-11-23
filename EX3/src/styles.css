@@ -1,0 +1,8 @@
+:root { font-family: system-ui, sans-serif; color-scheme: light; }
+body { margin: 0; padding: 2rem 1rem; }
+main { max-width: 38rem; margin: auto; }
+.field { display: grid; gap: .35rem; margin-bottom: 1rem; }
+input { font: inherit; padding: .6rem; border: 1px solid #666; border-radius: .25rem; }
+button { font: inherit; padding: .6rem 1rem; cursor: pointer; }
+:focus-visible { outline: 3px solid #1559c2; outline-offset: 3px; }
+.error { color: #a01818; margin: 0; }
