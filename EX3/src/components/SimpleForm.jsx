@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { FormContext } from '../formContext.js';
 import InputField from './InputField.jsx';
+import ShowData from './ShowData.jsx';
 
 // Fields and validators are supplied by the caller; the exercise does not define a schema yet.
 export default function SimpleForm({ fields, onSubmit }) {
   const [values, setValues] = useState(() => Object.fromEntries(fields.map(({ name }) => [name, ''])));
   const [touched, setTouched] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [lastSuccessfulSubmission, setLastSuccessfulSubmission] = useState(null);
   const errors = Object.fromEntries(fields.map(({ name, validate }) => [name, validate?.(values[name] ?? '', values) || '']));
   const isValid = Object.values(errors).every(error => error === '');
 
@@ -20,7 +22,9 @@ export default function SimpleForm({ fields, onSubmit }) {
     event.preventDefault();
     setSubmitted(true);
     if (!isValid) return;
-    onSubmit?.({ ...values });
+    const snapshot = { ...values };
+    setLastSuccessfulSubmission(snapshot);
+    onSubmit?.({ ...snapshot });
   }
 
   return (
@@ -29,6 +33,7 @@ export default function SimpleForm({ fields, onSubmit }) {
         {fields.map(({ name, label, type }) => <InputField key={name} name={name} label={label} type={type} />)}
         <button type="submit">Submit</button>
       </form>
+      {lastSuccessfulSubmission !== null && <ShowData data={lastSuccessfulSubmission} />}
     </FormContext.Provider>
   );
 }
