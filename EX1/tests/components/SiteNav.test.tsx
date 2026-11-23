@@ -48,7 +48,10 @@ describe('SiteNav', () => {
     const navigation = screen.getByRole('navigation', { name: 'Primary' })
     const currentLinks = within(navigation).getAllByRole('link', { current: 'page' })
 
-    expect(currentLinks).toEqual([within(navigation).getByRole('link', { name })])
+    const current = within(navigation).getByRole('link', { name })
+    expect(currentLinks).toEqual([current])
+    expect(navigation.querySelectorAll('.site-nav__link--active')).toHaveLength(1)
+    expect(current).toHaveClass('site-nav__link--active')
   })
 
   it.each(['/missing', '/people/ada-lovelace/extra', '/about/extra'])(

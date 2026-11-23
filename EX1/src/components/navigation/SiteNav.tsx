@@ -1,4 +1,4 @@
-import { Link, useMatch } from 'react-router'
+import { NavLink, useMatch } from 'react-router'
 
 const styles = `
   .site-nav {
@@ -16,7 +16,7 @@ const styles = `
   }
 
   .site-nav a:hover,
-  .site-nav a[aria-current="page"] {
+  .site-nav a.site-nav__link--active {
     color: var(--color-accent);
     text-decoration-color: currentColor;
   }
@@ -27,8 +27,11 @@ const styles = `
   }
 `
 
+function activeLinkClass({ isActive }: { isActive: boolean }) {
+  return isActive ? 'site-nav__link--active' : undefined
+}
+
 export default function SiteNav() {
-  const overview = useMatch('/')
   const directory = useMatch('/people')
   const profile = useMatch('/people/:personId')
   const about = useMatch('/about')
@@ -36,15 +39,10 @@ export default function SiteNav() {
   return (
     <nav aria-label="Primary" className="site-nav">
       <style href="pioneer-atlas-site-nav" precedence="components">{styles}</style>
-      <Link to="/" aria-current={overview ? 'page' : undefined}>
-        Overview
-      </Link>
-      <Link to="/people" aria-current={directory || profile ? 'page' : undefined}>
-        People
-      </Link>
-      <Link to="/about" aria-current={about ? 'page' : undefined}>
-        About
-      </Link>
+      <NavLink to="/" end className={activeLinkClass}>Overview</NavLink>
+      {/* Match the known route patterns, including their trailing slash variants. */}
+      <NavLink to="/people" end={!directory && !profile} className={activeLinkClass}>People</NavLink>
+      <NavLink to="/about" end={!about} className={activeLinkClass}>About</NavLink>
     </nav>
   )
 }

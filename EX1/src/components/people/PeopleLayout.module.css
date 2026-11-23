@@ -1,0 +1,21 @@
+.layout {
+  container: people-layout / inline-size;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.panels > section {
+  min-inline-size: 0;
+}
+
+/* Measure the available width inside the app shell. */
+@container people-layout (min-width: 64rem) {
+  .layout[data-view="profile"] .panels {
+    grid-template-columns: minmax(280px, 1fr) 2fr;
+  }
+}

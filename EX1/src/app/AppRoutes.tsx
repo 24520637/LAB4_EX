@@ -1,10 +1,14 @@
-import { lazy, type ReactNode } from 'react'
-import { Route, Routes } from 'react-router'
+import { lazy, Suspense, type ReactNode } from 'react'
+import { Route, Routes, useMatch } from 'react-router'
+import RouteReadySignal from '../components/a11y/RouteReadySignal'
 import AboutSkeleton, { GenericRouteSkeleton } from '../components/loading/AboutSkeleton'
 import OverviewSkeleton from '../components/loading/OverviewSkeleton'
 import PeopleSkeleton from '../components/loading/PeopleSkeleton'
 import PersonSkeleton from '../components/loading/PersonSkeleton'
+import RouteLoadingState from '../components/loading/RouteLoadingState'
+import PeopleLayout from '../components/people/PeopleLayout'
 import RouteBoundary from '../components/routing/RouteBoundary'
+import RouteErrorBoundary from '../components/routing/RouteErrorBoundary'
 
 const OverviewPage = lazy(() => import('../pages/OverviewPage'))
 const PeoplePage = lazy(() => import('../pages/PeoplePage'))
@@ -14,8 +18,6 @@ const NotFoundPage = lazy(() => import('../pages/NotFoundPage'))
 
 const routes = [
   { path: '/', label: 'overview', Page: OverviewPage, Skeleton: OverviewSkeleton },
-  { path: '/people', label: 'people', Page: PeoplePage, Skeleton: PeopleSkeleton },
-  { path: '/people/:personId', label: 'profile', Page: PersonPage, Skeleton: PersonSkeleton },
   { path: '/about', label: 'about', Page: AboutPage, Skeleton: AboutSkeleton },
   { path: '*', label: 'page', Page: NotFoundPage, Skeleton: GenericRouteSkeleton },
 ]
@@ -42,6 +44,27 @@ function SkeletonFallback({ label, children }: { label: string; children: ReactN
   )
 }
 
+function PeopleRoutes() {
+  const isProfile = useMatch('/people/:personId') !== null
+  const label = isProfile ? 'profile' : 'people'
+
+  // The outer fallback covers an unloaded directory. Once it mounts, the
+  // profile boundary can suspend in the outlet without hiding the directory.
+  return (
+    <RouteErrorBoundary>
+      <Suspense fallback={
+        <RouteLoadingState label={label}>
+          <SkeletonFallback label={label}>
+            {isProfile ? <PersonSkeleton /> : <PeopleSkeleton />}
+          </SkeletonFallback>
+        </RouteLoadingState>
+      }>
+        <PeopleLayout directory={<PeoplePage variant={isProfile ? 'compact' : 'full'} />} />
+      </Suspense>
+    </RouteErrorBoundary>
+  )
+}
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -60,6 +83,18 @@ export default function AppRoutes() {
           }
         />
       ))}
+      <Route path="people" element={<PeopleRoutes />}>
+        <Route index element={
+          <RouteReadySignal label="people">
+            <p>Select a pioneer to view their profile.</p>
+          </RouteReadySignal>
+        } />
+        <Route path=":personId" element={
+          <RouteBoundary label="profile" fallback={<SkeletonFallback label="profile"><PersonSkeleton /></SkeletonFallback>}>
+            <PersonPage />
+          </RouteBoundary>
+        } />
+      </Route>
     </Routes>
   )
 }

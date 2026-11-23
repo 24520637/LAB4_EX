@@ -23,6 +23,7 @@ const cases = [
   ['/people/ada-lovelace', 'Ada Lovelace'],
   ['/about', 'About Pioneer Atlas'],
   ['/not-a-route', '404 Page not found'],
+  ['/people/ada-lovelace/extra', '404 Page not found'],
 ] as const
 
 describe('lazy application routes', () => {
@@ -35,7 +36,10 @@ describe('lazy application routes', () => {
 
   it('handles an unknown person without a crash', async () => {
     renderAt('/people/no-such-person')
-    expect(await screen.findByRole('heading', { level: 1, name: 'Profile not found' })).toBeVisible()
+    const master = await screen.findByRole('region', { name: 'Pioneer directory' })
+    const detail = screen.getByRole('region', { name: 'Pioneer details' })
+    expect(within(master).getAllByRole('link')).toHaveLength(6)
+    expect(await within(detail).findByRole('heading', { level: 1, name: 'Profile not found' })).toBeVisible()
     expect(screen.getByRole('link', { name: 'Back to people directory' })).toHaveAttribute('href', '/people')
   })
 
@@ -57,6 +61,54 @@ describe('lazy application routes', () => {
     await user.click(screen.getByRole('link', { name: 'About' }))
     expect(await within(main).findByRole('heading', { level: 1, name: 'About Pioneer Atlas' })).toBeVisible()
     expect(screen.getByRole('banner')).toBe(header)
+  })
+
+
+  it('keeps the same filtered directory across profile selection, Back, and Forward', async () => {
+    const originalPath = window.location.pathname
+    window.history.replaceState({}, '', '/people')
+    const user = userEvent.setup()
+
+    try {
+      render(<App />)
+      const search = await screen.findByRole('searchbox', { name: 'Search by name' })
+      const master = screen.getByRole('region', { name: 'Pioneer directory' })
+      const detail = screen.getByRole('region', { name: 'Pioneer details' })
+      expect(within(detail).getByText('Select a pioneer to view their profile.')).toBeVisible()
+      await user.type(search, '  rA  ')
+      await user.tab()
+      expect(within(master).getByRole('link', { name: 'Grace Hopper' })).toHaveFocus()
+      await user.keyboard('{Enter}')
+
+      const grace = await within(detail).findByRole('heading', { level: 1, name: 'Grace Hopper' })
+      await waitFor(() => expect(grace).toHaveFocus())
+      expect(window.location.pathname).toBe('/people/grace-hopper')
+      expect(screen.getAllByRole('heading', { level: 1 })).toEqual([grace])
+      expect(within(master).getByRole('heading', { level: 2, name: 'People' })).toBeVisible()
+
+      await user.click(within(master).getByRole('link', { name: 'Radia Perlman' }))
+      const radia = await within(detail).findByRole('heading', { level: 1, name: 'Radia Perlman' })
+      await waitFor(() => expect(radia).toHaveFocus())
+      expect(screen.getByRole('searchbox')).toBe(search)
+      expect(search).toHaveValue('  rA  ')
+
+      window.history.back()
+      await waitFor(() => expect(window.location.pathname).toBe('/people/grace-hopper'))
+      expect(await within(detail).findByRole('heading', { level: 1, name: 'Grace Hopper' })).toHaveFocus()
+      window.history.back()
+      await waitFor(() => expect(window.location.pathname).toBe('/people'))
+      expect(await within(master).findByRole('heading', { level: 1, name: 'People' })).toHaveFocus()
+
+      window.history.forward()
+      await waitFor(() => expect(window.location.pathname).toBe('/people/grace-hopper'))
+      expect(await within(detail).findByRole('heading', { level: 1, name: 'Grace Hopper' })).toHaveFocus()
+      expect(screen.getByRole('region', { name: 'Pioneer directory' })).toBe(master)
+      expect(screen.getByRole('searchbox')).toBe(search)
+      expect(search).toHaveValue('  rA  ')
+      expect(within(master).getAllByRole('link')).toHaveLength(2)
+    } finally {
+      window.history.replaceState({}, '', originalPath)
+    }
   })
 
   it('supports Back and Forward through the real BrowserRouter', async () => {
