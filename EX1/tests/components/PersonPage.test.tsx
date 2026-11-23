@@ -1,9 +1,11 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter, Route, Routes } from 'react-router'
+import { MemoryRouter, Route, Routes, useNavigate } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { people } from '../../src/data/people'
 import PersonPage from '../../src/pages/PersonPage'
+import PeoplePage from '../../src/pages/PeoplePage'
+import PeopleLayout from '../../src/components/people/PeopleLayout'
 
 function renderDetail(path: string) {
   const user = userEvent.setup()
@@ -76,5 +78,73 @@ describe('PersonPage', () => {
 
     await user.keyboard('{Enter}')
     expect(screen.getByRole('heading', { level: 1, name: 'People' })).toBeVisible()
+  })
+})
+
+
+function NestedHistoryActions() {
+  const navigate = useNavigate()
+  return (
+    <nav aria-label="Test history controls">
+      <button type="button" onClick={() => navigate(-1)}>Back</button>
+    </nav>
+  )
+}
+
+function renderNestedDetail(initialPath: string) {
+  const user = userEvent.setup()
+  render(
+    <MemoryRouter initialEntries={['/people', initialPath]} initialIndex={1}>
+      <NestedHistoryActions />
+      <Routes>
+        <Route path="people" element={<PeopleLayout directory={<PeoplePage variant="compact" />} />}>
+          <Route index element={<p>Select a pioneer to view their profile.</p>} />
+          <Route path=":personId" element={<PersonPage />} />
+        </Route>
+        <Route path="*" element={<h1>Global page not found</h1>} />
+      </Routes>
+    </MemoryRouter>,
+  )
+  return user
+}
+
+describe('PersonPage nested Master–Detail contract (Exercise 1.2)', () => {
+  it.each(people)('resolves nested useParams and semantic metadata for $id', ({ id, name, era, field, summary, contributions }) => {
+    renderNestedDetail(`/people/${id}`)
+    const detail = screen.getByRole('region', { name: 'Pioneer details' })
+    const master = screen.getByRole('region', { name: 'Pioneer directory' })
+    expect(within(master).getByRole('heading', { level: 2, name: 'People' })).toBeVisible()
+    expect(within(detail).getByRole('heading', { level: 1, name })).toBeVisible()
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+    const metadata = detail.querySelector('dl')
+    expect(metadata).not.toBeNull()
+    const pairs = [...metadata!.querySelectorAll('dt')].map((dt) => [dt.textContent, dt.nextElementSibling?.textContent])
+    expect(pairs).toEqual([['Era', era], ['Field', field]])
+    expect(within(detail).getByText(summary)).toBeVisible()
+    const contributionsList = within(within(detail).getByRole('region', { name: 'Contributions' })).getByRole('list')
+    expect(within(contributionsList).getAllByRole('listitem').map((li) => li.textContent)).toEqual(contributions)
+    expect(within(master).getByRole('link', { name })).toHaveAttribute('href', `/people/${id}`)
+  })
+
+  it.each(['/people/missing-person', '/people/ADA-LOVELACE', '/people/%20'])('keeps an invalid ID inside the detail outlet: %s', (path) => {
+    renderNestedDetail(path)
+    const detail = screen.getByRole('region', { name: 'Pioneer details' })
+    expect(within(detail).getByRole('heading', { level: 1, name: 'Profile not found' })).toBeVisible()
+    expect(screen.queryByRole('heading', { name: 'Global page not found' })).not.toBeInTheDocument()
+    expect(within(detail).getByRole('link', { name: 'Back to people directory' })).toHaveAttribute('href', '/people')
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+  })
+
+  it('preserves master navigation and recovers via native link, including browser Back', async () => {
+    const user = renderNestedDetail('/people/ada-lovelace')
+    const master = screen.getByRole('region', { name: 'Pioneer directory' })
+    expect(within(master).getByRole('link', { name: 'Ada Lovelace' })).toHaveAttribute('aria-current', 'page')
+    await user.click(within(master).getByRole('link', { name: 'Grace Hopper' }))
+    expect(screen.getByRole('heading', { level: 1, name: 'Grace Hopper' })).toBeVisible()
+    expect(within(master).getByRole('link', { name: 'Grace Hopper' })).toHaveAttribute('aria-current', 'page')
+    await user.click(screen.getByRole('button', { name: 'Back' }))
+    expect(screen.getByRole('heading', { level: 1, name: 'Ada Lovelace' })).toBeVisible()
+    await user.click(screen.getByRole('link', { name: 'Back to people directory' }))
+    expect(screen.getByText('Select a pioneer to view their profile.')).toBeVisible()
   })
 })
